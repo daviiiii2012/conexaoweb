@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cone.xaoweb | Criação de Sites Profissionais</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-deep: #050811;
+            --bg-card: rgba(13, 19, 33, 0.75);
+            --bg-card-hover: rgba(20, 29, 50, 0.85);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.45);
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-purple: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(99, 102, 241, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* TELA DE INTRODUÇÃO CINEMATOGRÁFICA */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle at center, #0a1128 0%, #03050a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOutIntro 0.8s ease 3.2s forwards;
+            overflow: hidden;
+        }
+
+        #intro-screen::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseGlow 3s infinite alternate;
+            z-index: 1;
+        }
+
+        .intro-box {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: introZoom 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scanner-ring {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px dashed rgba(6, 182, 212, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: spinRing 8s linear infinite;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
+        }
+
+        .computer-graphic-box {
+            font-size: 50px;
+            color: var(--accent-cyan);
+            filter: drop-shadow(0 0 15px var(--accent-cyan));
+        }
+
+        .intro-brand {
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .intro-tagline {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        .loading-bar-container {
+            width: 220px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .loading-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+            border-radius: 10px;
+            animation: fillProgress 2.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            box-shadow: 0 0 15px var(--accent-cyan);
+        }
+
+        @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulseGlow { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0.9; } }
+        @keyframes fillProgress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
+        @keyframes fadeOutIntro { to { opacity: 0; visibility: hidden; } }
+        @keyframes introZoom { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 8, 17, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            z-index: 1000;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
+        .logo span { color: var(--primary); }
+
+        nav a { color: var(--text-muted); text-decoration: none; margin-left: 25px; font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
+        nav a:hover { color: var(--primary); }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 140px 20px 60px;
+            background: linear-gradient(to bottom, rgba(5, 8, 17, 0.75), rgba(5, 8, 17, 0.95)), 
+                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #818cf8;
+            margin-bottom: 25px;
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.15);
+        }
+
+        .hero h1 { font-size: 4.2rem; font-weight: 800; max-width: 950px; margin-bottom: 25px; line-height: 1.1; letter-spacing: -2px; }
+        .hero h1 span { background: linear-gradient(135deg, #818cf8, var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 680px; margin-bottom: 40px; line-height: 1.6; }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), #4f46e5);
+            color: #fff;
+            padding: 18px 38px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 0 35px var(--primary-glow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 0 50px rgba(99, 102, 241, 0.8); }
+
+        /* 🔄 FAIXA ANIMADA EM MOVIMENTO (MARQUEE) */
+        .ticker-wrap {
+            width: 100%;
+            background: linear-gradient(90deg, #090d19, #131b31, #090d19);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+            padding: 15px 0;
+            white-space: nowrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .ticker-move {
+            display: inline-block;
+            animation: tickerAnimation 25s linear infinite;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            padding: 0 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ticker-item i {
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+        }
+
+        @keyframes tickerAnimation {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* PORTFÓLIO / TRABALHOS REAIS */
+        .portfolio-section { padding: 120px 8%; background: var(--bg-deep); }
+        .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -1px; text-align: center; }
+        .section-subtitle { color: var(--text-muted); margin-bottom: 50px; font-size: 1.15rem; text-align: center; }
+
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .portfolio-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .portfolio-card:hover { transform: translateY(-6px); border-color: var(--border-hover); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .portfolio-img { height: 210px; width: 100%; object-fit: cover; border-bottom: 1px solid var(--border-color); }
+        .portfolio-content { padding: 25px; flex-grow: 1; }
+        .portfolio-content h3 { font-size: 1.3rem; margin-bottom: 8px; font-weight: 700; }
+        .portfolio-content p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; }
+        .tag-pill { display: inline-block; background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; }
+        
+        .portfolio-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            margin: 0 25px 25px 25px;
+            justify-content: center;
+        }
+        .portfolio-link:hover { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+
+        /* DEMONSTRAÇÃO VISUAL (MOCKUP) */
+        .showcase-section { padding: 100px 8%; text-align: center; background: radial-gradient(circle at center, rgba(6, 182, 212, 0.05) 0%, transparent 70%); }
+        .browser-mockup { max-width: 1000px; margin: 0 auto; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 30px 70px rgba(0,0,0,0.7); overflow: hidden; backdrop-filter: blur(10px); text-align: left; }
+        .browser-header { background: rgba(10, 15, 28, 0.95); padding: 16px 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ef4444; } .dot-yellow { background: #f59e0b; } .dot-green { background: #10b981; }
+        .browser-address-bar { background: rgba(255,255,255,0.05); padding: 6px 18px; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); flex-grow: 1; margin-left: 15px; font-family: monospace; }
+        .browser-body-bg { position: relative; min-height: 450px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 40px; background: linear-gradient(to bottom, rgba(5, 8, 17, 0.7), rgba(5, 8, 17, 0.9)), url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover; }
+        .browser-body-bg h3 { font-size: 2.2rem; margin-bottom: 15px; font-weight: 800; }
+        .browser-body-bg p { color: var(--text-muted); max-width: 620px; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+
+        /* PREÇOS */
+        .pricing-section { padding: 120px 8%; background: var(--bg-deep); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
+        .price-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 45px 35px; position: relative; backdrop-filter: blur(12px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; justify-content: space-between; }
+        .price-card:hover { transform: translateY(-8px); border-color: var(--border-hover); background: var(--bg-card-hover); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .price-card.featured { border: 2px solid var(--primary); box-shadow: 0 0 40px rgba(99, 102, 241, 0.25); background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, rgba(13, 19, 33, 0.85) 100%); }
+        .popular-badge { position: absolute; top: -16px; right: 35px; background: var(--primary); color: #fff; padding: 6px 16px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 50px; box-shadow: 0 4px 15px var(--primary-glow); }
+        .card-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; }
+        .price-tag { font-size: 2.6rem; font-weight: 800; margin-bottom: 30px; }
+        .price-card.basic .price-tag { color: var(--accent-green); }
+        .price-card.complete .price-tag { color: var(--accent-cyan); }
+        .price-card.custom .price-tag { color: var(--accent-purple); }
+        .features-list { list-style: none; margin-bottom: 35px; flex-grow: 1; }
+        .features-list li { margin-bottom: 14px; color: var(--text-muted); font-size: 0.95rem; display: flex; align-items: center; gap: 12px; }
+        .features-list li i { color: var(--accent-green); }
+        .card-btn { display: block; text-align: center; background: rgba(255, 255, 255, 0.06); color: #fff; padding: 15px; border-radius: 14px; text-decoration: none; font-weight: 700; border: 1px solid var(--border-color); transition: all 0.3s; }
+        .price-card.featured .card-btn, .card-btn:hover { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 25px var(--primary-glow); }
+
+        /* EXTRAS */
+        .extras-wrapper { margin-top: 60px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 40px; max-width: 1000px; margin-left: auto; margin-right: auto; backdrop-filter: blur(10px); }
+        .extras-wrapper h4 { font-size: 1.4rem; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+        .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 25px; }
+        .extra-card { background: rgba(5, 8, 17, 0.5); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .extra-card strong { display: block; color: #fff; margin-bottom: 6px; font-size: 1rem; }
+        .extra-card span { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* VANTAGENS EXCLUSIVAS */
+        .benefits-section { padding: 120px 8%; background: radial-gradient(circle at center, rgba(99, 102, 241, 0.08) 0%, var(--bg-deep) 70%); }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 50px; }
+        .benefit-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 35px 30px; backdrop-filter: blur(10px); transition: all 0.3s; }
+        .benefit-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .benefit-icon { font-size: 35px; color: var(--accent-cyan); margin-bottom: 20px; }
+        .benefit-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; color: #fff; }
+        .benefit-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+
+        /* FAQ COM ACORDEÃO INTERATIVO */
+        .faq-section { padding: 120px 8%; background: var(--bg-deep); }
+        .faq-container { max-width: 800px; margin: 50px auto 0; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; margin-bottom: 15px; overflow: hidden; backdrop-filter: blur(10px); transition: border-color 0.3s; }
+        .faq-item.active { border-color: var(--primary); }
+        .faq-question { padding: 22px 25px; font-size: 1.1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #fff; }
+        .faq-question i { transition: transform 0.3s; color: var(--primary); }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+        .faq-answer { max-height: 0; overflow: hidden; padding: 0 25px; color: var(--text-muted); font-size: 1rem; line-height: 1.6; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .faq-item.active .faq-answer { max-height: 200px; padding: 0 25px 22px 25px; }
+
+        /* DO ZERO AO AR (LIVRINHO INTERATIVO) */
+        .roadmap-section { padding: 120px 8%; background: linear-gradient(to bottom, var(--bg-deep), rgba(13, 19, 33, 0.4)); }
+        .book-card { max-width: 850px; margin: 50px auto 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; padding: 50px; box-shadow: 0 35px 70px rgba(0,0,0,0.5); backdrop-filter: blur(12px); position: relative; }
+        .book-page { display: none; animation: pageFade 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .book-page.active { display: block; }
+        .step-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-cyan); font-weight: 800; margin-bottom: 12px; }
+        .step-title { font-size: 2.1rem; margin-bottom: 18px; font-weight: 800; }
+        .step-desc { color: var(--text-muted); font-size: 1.15rem; line-height: 1.7; margin-bottom: 40px; }
+        .book-controls { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; }
+        .nav-btn { background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: #fff; padding: 12px 26px; border-radius: 14px; cursor: pointer; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 10px; }
+        .nav-btn:hover { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+        .page-counter { color: var(--text-muted); font-weight: 600; font-size: 0.95rem; }
+        @keyframes pageFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CTA FINAL */
+        .cta-section { padding: 140px 8%; text-align: center; background: radial-gradient(circle at center, rgba(99,102,241,0.2) 0%, var(--bg-deep) 75%); position: relative; }
+        .cta-title { font-size: 3.8rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -1.5px; }
+        .cta-subtitle { color: var(--text-muted); font-size: 1.2rem; max-width: 620px; margin: 0 auto 45px; }
+        .contact-actions { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .contact-btn { display: flex; align-items: center; gap: 14px; padding: 18px 36px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.3s; }
+        .whatsapp-action { background: #25d366; color: #fff; box-shadow: 0 0 30px rgba(37, 211, 102, 0.4); }
+        .instagram-action { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; box-shadow: 0 0 30px rgba(220, 39, 67, 0.4); }
+        .contact-btn:hover { transform: translateY(-4px); filter: brightness(1.15); }
+
+        /* WHATSAPP FLUTUANTE FIXO */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25d366;
+            color: #fff;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+            z-index: 999;
+            transition: all 0.3s;
+            text-decoration: none;
+            animation: floatWhatsApp 3s ease-in-out infinite;
+        }
+        .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
+        @keyframes floatWhatsApp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border-color); }
+
+        @media(max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .cta-title { font-size: 2.5rem; }
+            header { padding: 15px 5%; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🚀 WHATSAPP FLUTUANTE -->
+    <a href="https://wa.me/5511913407970?text=Olá! Vim pelo site da cone.xaoweb e quero tirar dúvidas." target="_blank" class="whatsapp-float">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- 1. TELA DE INTRODUÇÃO -->
+    <div id="intro-screen">
+        <div class="intro-box">
+            <div class="scanner-ring">
+                <div class="computer-graphic-box">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+            </div>
+            <div class="intro-brand">cone.xaoweb</div>
+            <div class="intro-tagline">Inicializando Sistema Web</div>
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <a href="#" class="logo">cone.<span>xao</span>web</a>
+        <nav>
+            <a href="#portfolio">Portfólio</a>
+            <a href="#servicos">Planos</a>
+            <a href="#beneficios">Vantagens</a>
+            <a href="#passoapasso">Processo</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contato">Contato</a>
+        </nav>
+    </header>
+
+    <!-- 2. HERO SECTION -->
+    <section class="hero">
+        <div class="badge-pill">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Engenharia Web de Alto Desempenho
+        </div>
+        <h1>Criamos sites profissionais que geram <span>impacto imediato</span></h1>
+        <p>Eleve a autoridade da sua marca com um site moderno, rápido e focado em transformar visitantes em clientes fiéis.</p>
+        <a href="#servicos" class="btn-primary">
+            Explorar Planos e Preços <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </section>
+
+    <!-- 🔄 3. FAIXA ANIMADA EM MOVIMENTO INFINITO (MARQUEE) -->
+    <div class="ticker-wrap">
+        <div class="ticker-move">
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Criação de Sites Profissionais</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Alta Performance e Velocidade</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> 100% Responsivo para Celular</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Atendimento via WhatsApp</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Código Limpo no VS Code</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Sua Empresa no Digital</div>
+            <!-- Duplicado para fazer o efeito infinito perfeito -->
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Criação de Sites Profissionais</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Alta Performance e Velocidade</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> 100% Responsivo para Celular</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Atendimento via WhatsApp</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Código Limpo no VS Code</div>
+            <div class="ticker-item"><i class="fa-solid fa-circle"></i> Sua Empresa no Digital</div>
+        </div>
+    </div>
+
+    <!-- 4. PORTFÓLIO COM OS SEUS TRABALHOS REAIS -->
+    <section class="portfolio-section" id="portfolio">
+        <div class="badge-pill" style="display: table; margin: 0 auto 15px;">Nossos Trabalhos Reais</div>
+        <h2 class="section-title">Projetos Entregues</h2>
+        <p class="section-subtitle">Conheça algumas das interfaces de alta performance que desenvolvemos</p>
+
+        <div class="portfolio-grid">
+            <!-- Projeto 1: Davi Enzo Atleta -->
+            <div class="portfolio-card">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=800&q=80" alt="Davi Enzo Atleta" class="portfolio-img">
+                    <div class="portfolio-content">
+                        <span class="tag-pill">Portfólio Pessoal / Atleta</span>
+                        <h3>Davi Enzo Atleta</h3>
+                        <p>Landing page moderna desenvolvida para destacar a trajetória esportiva, conquistas e conexões diretas via redes sociais.</p>
+                    </div>
+                </div>
+                <a href="https://daviiiii2012.github.io/davienzo-atleta/?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" class="portfolio-link">
+                    Acessar Projeto <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <!-- Projeto 2: Figueira das Lágrimas -->
+            <div class="portfolio-card">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80" alt="Figueira das Lágrimas" class="portfolio-img">
+                    <div class="portfolio-content">
+                        <span class="tag-pill">Institucional / Projeto</span>
+                        <h3>Figueira das Lágrimas</h3>
+                        <p>Interface elegante e estruturada focada em passar identidade refinada, clareza nas informações e experiência fluida.</p>
+                    </div>
+                </div>
+                <a href="https://figueira-das-lagrimas-44.vercel.app/" target="_blank" class="portfolio-link">
+                    Acessar Projeto <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. DEMONSTRAÇÃO COM MOCKUP -->
+    <section class="showcase-section">
+        <h2 class="section-title">Padrão Visual Impecável</h2>
+        <p class="section-subtitle">Arquitetura de código limpa, otimização extrema e design responsivo.</p>
+        
+        <div class="browser-mockup">
+            <div class="browser-header">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+                <div class="browser-address-bar">https://www.conexaoweb.com.br/projetos</div>
+            </div>
+            <div class="browser-body-bg">
+                <h3>O futuro digital da sua empresa começa aqui</h3>
+                <p>Desenvolvemos interfaces limpas, intuitivas e altamente responsivas para que sua empresa se destaque em computadores, tablets e smartphones.</p>
+                <a href="#contato" class="btn-primary" style="padding: 14px 30px; font-size: 1rem;">Quero transformar meu negócio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. PREÇOS -->
+    <section class="pricing-section" id="servicos">
+        <div style="text-align: center;">
+            <div class="badge-pill">Tabela Oficial</div>
+            <h2 class="section-title">Nossos Planos</h2>
+            <p class="section-subtitle">A solução ideal para cada estágio da sua presença online</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="price-card basic">
+                <div>
+                    <h3 class="card-title">Site Básico</h3>
+                    <div class="price-tag">R$ 150</div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-circle-check"></i> 1 página focada em conversão</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Design limpo e moderno</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Botão integrado para WhatsApp</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Link direto para o Instagram</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Endereço e localização da empresa</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Responsivo para celular</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Publicação online inclusa</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/5511913407970?text=Olá! Quero fechar o Site Básico da cone.xaoweb." target="_blank" class="card-btn">Quero o Básico</a>
+            </div>
+
+            <div class="price-card complete featured">
+                <div class="popular-badge">Mais Popular</div>
+                <div>
+                    <h3 class="card-title">Site Completo</h3>
+                    <div class="price-tag">R$ 250</div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-circle-check"></i> Até 4 páginas estruturadas</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Início, Sobre, Serviços e Contato</li>
+                        <li><i class="fa-solid fa-circle-check"></i> WhatsApp e Instagram integrados</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Google Maps integrado</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Design personalizado exclusivo</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Pronto para anúncios e tráfego</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/5511913407970?text=Olá! Quero fechar o Site Completo da cone.xaoweb." target="_blank" class="card-btn">Quero o Completo</a>
+            </div>
+
+            <div class="price-card custom">
+                <div>
+                    <h3 class="card-title">Site Personalizado</h3>
+                    <div class="price-tag" style="font-size: 2.1rem; margin-top: 10px; margin-bottom: 30px;">a partir de R$ 350</div>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-circle-check"></i> Páginas ilimitadas sob demanda</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Funcionalidades avançadas</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Layout altamente elaborado</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Projeto sob medida exclusivo</li>
+                    </ul>
+                </div>
+                <a href="https://wa.me/5511913407970?text=Olá! Gostaria de um orçamento para Site Personalizado na cone.xaoweb." target="_blank" class="card-btn" style="background: var(--accent-purple); border-color: var(--accent-purple);">Falar com Especialista</a>
+            </div>
+        </div>
+
+        <div class="extras-wrapper">
+            <h4><i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Serviços Adicionais & Extras</h4>
+            <div class="extras-grid">
+                <div class="extra-card">
+                    <strong>Alteração Pós-Entrega</strong>
+                    <span>R$ 20 – R$ 30 por ajuste</span>
+                </div>
+                <div class="extra-card">
+                    <strong>Página Adicional</strong>
+                    <span>R$ 30 por nova página criada</span>
+                </div>
+                <div class="extra-card">
+                    <strong>Manutenção Simples</strong>
+                    <span>R$ 30 – R$ 50 mensais/pontual</span>
+                </div>
+                <div class="extra-card">
+                    <strong>Domínio / Hospedagem</strong>
+                    <span>Cobrado à parte quando houver custo.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. VANTAGENS EXCLUSIVAS -->
+    <section class="benefits-section" id="beneficios">
+        <div style="text-align: center;">
+            <div class="badge-pill">Por que nos escolher?</div>
+            <h2 class="section-title">Vantagens Exclusivas cone.xaoweb</h2>
+            <p class="section-subtitle">O que entregamos de melhor em cada projeto desenvolvido</p>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Velocidade e Performance</h3>
+                <p>Sites altamente otimizados que carregam em instantes, garantindo que nenhum cliente desista de navegar por lentidão.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <h3>100% Responsivo</h3>
+                <p>Adaptação perfeita e visual impecável em qualquer tela, seja em smartphones, tablets ou computadores.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-comments"></i></div>
+                <h3>Suporte Direto</h3>
+                <p>Atendimento rápido, transparente e sem burocracia direto pelo WhatsApp durante todo o processo de criação.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h3>Foco em Conversão</h3>
+                <p>Estrutura estratégica pensada para transformar visitantes curiosos em clientes reais chamando no seu WhatsApp.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. DO ZERO AO AR (LIVRINHO INTERATIVO) -->
+    <section class="roadmap-section" id="passoapasso">
+        <div style="text-align: center;">
+            <div class="badge-pill">Processo Transparente</div>
+            <h2 class="section-title">Do Zero ao Ar</h2>
+            <p class="section-subtitle">Acompanhe as páginas do livrinho interativo para entender cada etapa do projeto</p>
+        </div>
+
+        <div class="book-card">
+            <div class="book-page active" id="page-1">
+                <div class="step-label">Passo 01 de 04</div>
+                <h3 class="step-title">Estruturação e Códigos no VS Code</h3>
+                <p class="step-desc">Tudo começa no ambiente de desenvolvimento. Escrevemos códigos otimizados em HTML, CSS e JavaScript, estruturando o layout sob medida para a identidade visual da sua marca.</p>
+            </div>
+            <div class="book-page" id="page-2">
+                <div class="step-label">Passo 02 de 04</div>
+                <h3 class="step-title">Inserção de Conteúdo e Mídias</h3>
+                <p class="step-desc">Integramos suas informações cruciais: textos persuasivos, imagens de alta resolução, botões flutuantes de atendimento e os links oficiais para as redes sociais.</p>
+            </div>
+            <div class="book-page" id="page-3">
+                <div class="step-label">Passo 03 de 04</div>
+                <h3 class="step-title">Testes Rigorosos de Responsividade</h3>
+                <p class="step-desc">Testamos minuciosamente o site em diferentes dispositivos (smartphones, tablets e computadores) para garantir uma navegação fluida, rápida e sem falhas.</p>
+            </div>
+            <div class="book-page" id="page-4">
+                <div class="step-label">Passo 04 de 04</div>
+                <h3 class="step-title">Lançamento Oficial e Postagens</h3>
+                <p class="step-desc">Realizamos a publicação online do seu site! O projeto vai ao ar pronto para receber tráfego orgânico, campanhas de anúncios e impulsionar suas postagens na internet.</p>
+            </div>
+
+            <div class="book-controls">
+                <button class="nav-btn" onclick="mudarPagina(-1)"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+                <span class="page-counter" id="indicator">1 de 4</span>
+                <button class="nav-btn" onclick="mudarPagina(1)">Próximo <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FAQ INTERATIVO -->
+    <section class="faq-section" id="faq">
+        <div class="badge-pill" style="display: table; margin: 0 auto 15px;">Dúvidas Frequentes</div>
+        <h2 class="section-title">Perguntas Frequentes</h2>
+        <p class="section-subtitle">Tudo o que você precisa saber antes de iniciar seu projeto</p>
+
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Quanto tempo demora para o site ficar pronto? <i class="fa-solid fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    O prazo médio de entrega varia de 3 a 7 dias úteis após o envio de todas as informações, textos e imagens do seu negócio.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Preciso pagar mensalidade pelo site? <i class="fa-solid fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    Não cobramos mensalidade de criação! O valor do plano é único pelo desenvolvimento do projeto. Custos eventuais de domínio ou hospedagem (se houver) são informados com total transparência.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>O site funciona bem em celulares? <i class="fa-solid fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    Sim! Todos os nossos projetos são desenvolvidos com design 100% responsivo, garantindo excelente visualização e velocidade em smartphones, tablets e computadores.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Como faço para enviar minhas informações para o site? <i class="fa-solid fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    Após fechar o plano pelo WhatsApp, conversaremos diretamente para alinhar seus textos, logotipo, fotos de produtos ou serviços e preferências de cores.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. CTA FINAL -->
+    <section class="cta-section" id="contato">
+        <h2 class="cta-title">Vamos criar algo?</h2>
+        <p class="cta-subtitle">Dê o primeiro passo para transformar a presença digital da sua empresa hoje mesmo com a cone.xaoweb.</p>
+        
+        <div class="contact-actions">
+            <a href="https://wa.me/5511913407970?text=Olá! Vim pelo site da cone.xaoweb e quero criar meu site profissional." target="_blank" class="contact-btn whatsapp-action">
+                <i class="fa-brands fa-whatsapp fa-xl"></i> WhatsApp: (11) 91340-7970
+            </a>
+            <a href="https://www.instagram.com/cone.xaoweb/" target="_blank" class="contact-btn instagram-action">
+                <i class="fa-brands fa-instagram fa-xl"></i> @cone.xaoweb
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 cone.xaoweb. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Livrinho Interativo
+        let paginaAtual = 1;
+        const totalPaginas = 4;
+
+        function mudarPagina(direcao) {
+            document.getElementById(`page-${paginaAtual}`).classList.remove('active');
+            paginaAtual += direcao;
+            if (paginaAtual > totalPaginas) paginaAtual = 1; 
+            else if (paginaAtual < 1) paginaAtual = totalPaginas; 
+            document.getElementById(`page-${paginaAtual}`).classList.add('active');
+            document.getElementById('indicator').innerText = `${paginaAtual} de ${totalPaginas}`;
+        }
+
+        // Acordeão FAQ Interativo
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Fecha todos os outros itens
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('active');
+            });
+
+            // Se não estava ativo, abre este
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
